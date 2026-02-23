@@ -1651,7 +1651,7 @@ The service provider MUST provide a minimum **3-month corrective maintenance war
 
 # 10. UML DIAGRAMS
 
-All diagrams are provided in PlantUML syntax for version control alongside source code. Each diagram references the requirement IDs it supports. Any deviation from these diagrams during implementation MUST be documented as an Architecture Decision Record (ADR) and approved in writing by Bloomfield Intelligence.
+All diagrams are provided in Mermaid syntax for version control alongside source code. Each diagram references the requirement IDs it supports. Any deviation from these diagrams during implementation MUST be documented as an Architecture Decision Record (ADR) and approved in writing by Bloomfield Intelligence.
 
 ---
 
@@ -1661,162 +1661,107 @@ All diagrams are provided in PlantUML syntax for version control alongside sourc
 
 **Rationale:** Establishes the contractual boundary of Bloomfield Terminal v1.0. Every use case represented here is in scope. Anything absent is explicitly excluded from this contract.
 
-```plantuml
-@startuml B1_UseCaseDiagram
-title Bloomfield Terminal v1.0 — System Use Case Diagram\nVersion 1.0 | February 2026
+```mermaid
+flowchart LR
+    %% User Actors
+    trader(["👤 SGI Trader"])
+    instinv(["👤 Institutional Investor"])
+    analyst(["👤 Financial Analyst"])
+    pubadm(["👤 Public Administration"])
+    indiv(["👤 Individual Investor"])
+    admin(["👤 Bloomfield Administrator"])
 
-left to right direction
-skinparam packageStyle rectangle
-skinparam actorStyle awesome
+    %% External Actors
+    brvm[/"⚡ BRVM Data Feed"\]
+    bceao[/"⚡ BCEAO API"\]
+    imf[/"⚡ IMF / World Bank APIs"\]
+    fxprov[/"⚡ FX / Commodity Providers"\]
+    emailsms[/"⚡ Email / SMS Gateway"\]
 
-' ─── Actors ───────────────────────────────────────────────────────
-actor "SGI Trader" as trader
-actor "Institutional\nInvestor" as instinv
-actor "Financial\nAnalyst" as analyst
-actor "Public\nAdministration" as pubadm
-actor "Individual\nInvestor" as indiv
-actor "Bloomfield\nAdministrator" as admin
+    subgraph BT["🖥️  Bloomfield Terminal"]
+        UC_AUTH(["Authenticate with MFA"])
+        UC_WKSP(["Manage Workspace Layout"])
 
-actor "BRVM Data Feed" as brvm <<external>>
-actor "BCEAO API" as bceao <<external>>
-actor "IMF / World Bank\nAPIs" as imf <<external>>
-actor "FX / Commodity\nProviders" as fxprov <<external>>
-actor "Email / SMS\nGateway" as emailsms <<external>>
+        subgraph M1["Module 1: Stock Exchange Operations"]
+            UC_M1_PRICES(["View Real-Time BRVM Prices"])
+            UC_M1_OB(["Monitor Live Order Book"])
+            UC_M1_CHART(["Analyse Candlestick Chart"])
+            UC_M1_ALERTS(["Configure Price Alerts"])
+            UC_M1_TRADES(["View Trade History"])
+            UC_M1_FX(["Monitor FX & Commodity Prices"])
+            UC_M1_WATCH(["Manage Watchlist"])
+        end
 
-' ─── System Boundary ──────────────────────────────────────────────
-rectangle "Bloomfield Terminal" {
+        subgraph M2["Module 2: Portfolio Management"]
+            UC_M2_PORT(["Construct & Manage Portfolios"])
+            UC_M2_PNL(["Track Real-Time Holdings & P&L"])
+            UC_M2_BENCH(["Compare vs Benchmark"])
+            UC_M2_EXPORT(["Export Portfolio Report"])
+        end
 
-  ' --- Authentication (shared) ---
-  usecase "Authenticate\nwith MFA" as UC_AUTH
-  usecase "Manage\nWorkspace Layout" as UC_WKSP
+        subgraph M3["Module 3: Financial Analysis & Risk"]
+            UC_M3_FUND(["Analyse Company Fundamentals"])
+            UC_M3_RISK(["View Country & Sector Risk"])
+            UC_M3_SOV(["Monitor Sovereign Spreads & Ratings"])
+            UC_M3_VAR(["Calculate Portfolio VaR"])
+        end
 
-  ' --- Module 1: Stock Exchange Operations ---
-  package "Module 1: Stock Exchange Operations" {
-    usecase "View Real-Time\nBRVM Prices" as UC_M1_PRICES
-    usecase "Monitor Live\nOrder Book" as UC_M1_OB
-    usecase "Analyse\nCandlestick Chart" as UC_M1_CHART
-    usecase "Configure\nPrice Alerts" as UC_M1_ALERTS
-    usecase "View Trade\nHistory" as UC_M1_TRADES
-    usecase "Monitor FX &\nCommodity Prices" as UC_M1_FX
-    usecase "Manage\nWatchlist" as UC_M1_WATCH
-  }
+        subgraph M4["Module 4: Macroeconomic Data"]
+            UC_M4_MACRO(["Explore Macro Indicators"])
+            UC_M4_BCEAO(["View BCEAO Monetary Data"])
+            UC_M4_BOND(["Analyse Bond Market Data"])
+            UC_M4_COMP(["Compare Regional Economies"])
+        end
 
-  ' --- Module 2: Portfolio Management ---
-  package "Module 2: Portfolio Management" {
-    usecase "Construct &\nManage Portfolios" as UC_M2_PORT
-    usecase "Track Real-Time\nHoldings & P&L" as UC_M2_PNL
-    usecase "Compare vs\nBenchmark" as UC_M2_BENCH
-    usecase "Export Portfolio\nReport" as UC_M2_EXPORT
-  }
+        subgraph M5["Module 5: Communication & Education"]
+            UC_M5_NEWS(["Read Financial News Feed"])
+            UC_M5_RESEARCH(["Access Research Library"])
+            UC_M5_COMM(["View Market Commentary"])
+            UC_M5_TV(["Watch Web TV Broadcasts"])
+        end
 
-  ' --- Module 3: Financial Analysis & Risk ---
-  package "Module 3: Financial Analysis & Risk" {
-    usecase "Analyse Company\nFundamentals" as UC_M3_FUND
-    usecase "View Country &\nSector Risk" as UC_M3_RISK
-    usecase "Monitor Sovereign\nSpreads & Ratings" as UC_M3_SOV
-    usecase "Calculate\nPortfolio VaR" as UC_M3_VAR
-  }
+        subgraph M6["Module 6: Markets Dashboard"]
+            UC_M6_DASH(["Monitor Market Overview Dashboard"])
+            UC_M6_HEAT(["View Sector Heatmap"])
+            UC_M6_MOVERS(["Track Top Movers"])
+        end
 
-  ' --- Module 4: Macroeconomic Data ---
-  package "Module 4: Macroeconomic Data" {
-    usecase "Explore Macro\nIndicators" as UC_M4_MACRO
-    usecase "View BCEAO\nMonetary Data" as UC_M4_BCEAO
-    usecase "Analyse Bond\nMarket Data" as UC_M4_BOND
-    usecase "Compare Regional\nEconomies" as UC_M4_COMP
-  }
+        subgraph ADM["Administration Portal"]
+            UC_ADM_DATA(["Ingest & Validate Data"])
+            UC_ADM_PUB(["Publish Approved Content"])
+            UC_ADM_USERS(["Manage Users & Roles"])
+            UC_ADM_MON(["Monitor System Health"])
+            UC_ADM_AUDIT(["Review Audit Logs"])
+        end
+    end
 
-  ' --- Module 5: Communication & Education ---
-  package "Module 5: Communication & Education" {
-    usecase "Read Financial\nNews Feed" as UC_M5_NEWS
-    usecase "Access Research\nLibrary" as UC_M5_RESEARCH
-    usecase "View Market\nCommentary" as UC_M5_COMM
-    usecase "Watch Web TV\nBroadcasts" as UC_M5_TV
-  }
+    %% Include relationships
+    UC_M1_PRICES -.->|"«include»"| UC_AUTH
+    UC_M2_PORT -.->|"«include»"| UC_AUTH
+    UC_M3_FUND -.->|"«include»"| UC_AUTH
+    UC_M4_MACRO -.->|"«include»"| UC_AUTH
+    UC_M6_DASH -.->|"«include»"| UC_AUTH
+    UC_ADM_DATA -.->|"«include»"| UC_AUTH
+    UC_M1_PRICES -.->|"«include»"| UC_WKSP
+    UC_M6_DASH -.->|"«include»"| UC_WKSP
+    UC_M2_EXPORT -.->|"«extend»"| UC_M2_PNL
+    UC_M3_VAR -.->|"«extend»"| UC_M2_PORT
+    UC_M1_ALERTS -.->|"«extend»"| UC_M1_PRICES
 
-  ' --- Module 6: Markets Dashboard ---
-  package "Module 6: Markets Dashboard" {
-    usecase "Monitor Market\nOverview Dashboard" as UC_M6_DASH
-    usecase "View Sector\nHeatmap" as UC_M6_HEAT
-    usecase "Track Top\nMovers" as UC_M6_MOVERS
-  }
+    %% Actor → Use Case associations
+    trader --> UC_M1_PRICES & UC_M1_OB & UC_M1_CHART & UC_M1_ALERTS & UC_M2_PORT & UC_M6_DASH
+    instinv --> UC_M1_PRICES & UC_M2_PORT & UC_M2_BENCH & UC_M3_FUND & UC_M3_SOV & UC_M4_MACRO & UC_M6_DASH
+    analyst --> UC_M3_FUND & UC_M3_RISK & UC_M3_VAR & UC_M4_MACRO & UC_M4_BOND & UC_M5_RESEARCH & UC_M6_DASH
+    pubadm --> UC_M4_MACRO & UC_M4_BCEAO & UC_M4_BOND & UC_M4_COMP & UC_M3_RISK
+    indiv --> UC_M1_PRICES & UC_M2_PORT & UC_M5_NEWS & UC_M5_TV & UC_M6_DASH
+    admin --> UC_ADM_DATA & UC_ADM_PUB & UC_ADM_USERS & UC_ADM_MON & UC_ADM_AUDIT
 
-  ' --- Admin Portal ---
-  package "Administration Portal" {
-    usecase "Ingest & Validate\nData" as UC_ADM_DATA
-    usecase "Publish Approved\nContent" as UC_ADM_PUB
-    usecase "Manage Users\n& Roles" as UC_ADM_USERS
-    usecase "Monitor System\nHealth" as UC_ADM_MON
-    usecase "Review Audit\nLogs" as UC_ADM_AUDIT
-  }
-}
-
-' ─── Include relationships (shared behaviors) ─────────────────────
-UC_M1_PRICES ..> UC_AUTH : <<include>>
-UC_M2_PORT ..> UC_AUTH : <<include>>
-UC_M3_FUND ..> UC_AUTH : <<include>>
-UC_M4_MACRO ..> UC_AUTH : <<include>>
-UC_M6_DASH ..> UC_AUTH : <<include>>
-UC_ADM_DATA ..> UC_AUTH : <<include>>
-
-UC_M1_PRICES ..> UC_WKSP : <<include>>
-UC_M6_DASH ..> UC_WKSP : <<include>>
-
-' ─── Extend relationships (optional behaviors) ────────────────────
-UC_M2_EXPORT ..> UC_M2_PNL : <<extend>>
-UC_M3_VAR ..> UC_M2_PORT : <<extend>>
-UC_M1_ALERTS ..> UC_M1_PRICES : <<extend>>
-
-' ─── Actor → Use Case associations ───────────────────────────────
-trader --> UC_M1_PRICES
-trader --> UC_M1_OB
-trader --> UC_M1_CHART
-trader --> UC_M1_ALERTS
-trader --> UC_M2_PORT
-trader --> UC_M6_DASH
-
-instinv --> UC_M1_PRICES
-instinv --> UC_M2_PORT
-instinv --> UC_M2_BENCH
-instinv --> UC_M3_FUND
-instinv --> UC_M3_SOV
-instinv --> UC_M4_MACRO
-instinv --> UC_M6_DASH
-
-analyst --> UC_M3_FUND
-analyst --> UC_M3_RISK
-analyst --> UC_M3_VAR
-analyst --> UC_M4_MACRO
-analyst --> UC_M4_BOND
-analyst --> UC_M5_RESEARCH
-analyst --> UC_M6_DASH
-
-pubadm --> UC_M4_MACRO
-pubadm --> UC_M4_BCEAO
-pubadm --> UC_M4_BOND
-pubadm --> UC_M4_COMP
-pubadm --> UC_M3_RISK
-
-indiv --> UC_M1_PRICES
-indiv --> UC_M2_PORT
-indiv --> UC_M5_NEWS
-indiv --> UC_M5_TV
-indiv --> UC_M6_DASH
-
-admin --> UC_ADM_DATA
-admin --> UC_ADM_PUB
-admin --> UC_ADM_USERS
-admin --> UC_ADM_MON
-admin --> UC_ADM_AUDIT
-
-' ─── External system associations ────────────────────────────────
-brvm --> UC_M1_PRICES
-brvm --> UC_M1_OB
-bceao --> UC_M4_BCEAO
-imf --> UC_M4_COMP
-fxprov --> UC_M1_FX
-emailsms --> UC_M1_ALERTS
-
-@enduml
+    %% External system associations
+    brvm --> UC_M1_PRICES & UC_M1_OB
+    bceao --> UC_M4_BCEAO
+    imf --> UC_M4_COMP
+    fxprov --> UC_M1_FX
+    emailsms --> UC_M1_ALERTS
 ```
 
 ---
@@ -1827,76 +1772,67 @@ emailsms --> UC_M1_ALERTS
 
 **Rationale:** Makes the < 500ms latency requirement traceable to specific pipeline stages. Forces explicit architectural decisions about buffering, caching, and error handling at each handoff.
 
-```plantuml
-@startuml B2_ActivityDiagram_RealTimePipeline
-title Real-Time BRVM Price Ingestion Pipeline\nVersion 1.0 | February 2026
+```mermaid
+flowchart TD
+    A([▶ Start]) --> B["Market trade event occurs
+— BRVM Exchange —"]
+    B --> C["Publish tick to BRVM feed API"]
+    C --> D["Kafka Broker receives raw tick"]
+    D --> E["Consume message from
+topic: brvm.prices
+⏱ ~20ms budget"]
+    E --> F{Schema valid?}
+    F -- ❌ No --> G["Route to Dead Letter Queue
+(dlq.market-data)"]
+    G --> H["Trigger P2 admin alert"]
+    H --> Z1([⏹ Stop])
+    F -- ✅ Yes --> I["Normalize & enrich tick
+add processing timestamp"]
+    I --> J & K
+    J["Redis Cache
+HSET price:{ticker}
+last price, change, volume
+⏱ ~1ms"] --> J1["Reset TTL = 2 seconds"]
+    K["Kafka Broker
+Publish to topic: prices.processed
+⏱ ~5ms"]
+    J1 & K --> L["Socket.io Server
+Consume from prices.processed"]
+    L --> M["Determine target room:
+security:{ticker}
+⏱ ~10ms budget"]
+    M --> N{Any client subscribed
+to this room?}
+    N -- ✅ Yes --> O & P
+    O["Emit price event to all
+room subscribers via Redis Adapter
+⏱ Fan-out ~30ms"]
+    P{Alert threshold breached?}
+    P -- ✅ Yes --> Q["Publish to alerts.triggered topic"]
+    Q --> R["Send in-platform notification"]
+    R --> S["Queue email/SMS alert dispatch"]
+    P -- ❌ No --> T
+    O --> T["Browser: Receive price event
+from WebSocket
+⏱ ~50ms render budget"]
+    T --> U["Update React widget state"]
+    U --> V["TradingView chart re-renders
+live candle"]
+    V --> W["Price display updates
+on workspace"]
+    W --> X["TimescaleDB
+Async write: persist tick
+to price_records hypertable
+(not in latency path)"]
+    X --> Z2([⏹ Stop])
+    N -- ❌ No --> Y["Discard — no active
+subscribers for this ticker"]
+    Y --> Z3([⏹ Stop])
 
-skinparam swimlaneWidth 180
-
-|BRVM Exchange|
-start
-:Market trade event occurs;
-:Publish tick to BRVM feed API;
-
-|Kafka Broker|
-:Receive raw tick from\nBRVM feed connector;
-
-|NestJS Consumer (market-data-service)|
-:Consume message from\ntopic: brvm.prices;
-note right: ~20ms budget
-if (Schema valid?) then (no)
-  :Route to Dead\nLetter Queue;
-  :Trigger P2 admin alert;
-  stop
-else (yes)
-endif
-:Normalize & enrich tick\n(add processing timestamp);
-
-fork
-  |Redis Cache|
-  :HSET price:{ticker}\n(last price, change, volume);
-  note right: ~1ms
-  :Reset TTL = 2 seconds;
-fork again
-  |Kafka Broker|
-  :Publish to\ntopic: prices.processed;
-  note right: ~5ms
-end fork
-
-|NestJS Socket.io Server|
-:Consume from\nprices.processed;
-:Determine target room:\nsecurity:{ticker};
-note right: ~10ms budget
-if (Any client subscribed\nto this room?) then (yes)
-  fork
-    :Emit price event\nto all room subscribers\n(via Redis Adapter);
-    note right: Fan-out ~30ms
-  fork again
-    if (Alert threshold\nbreached?) then (yes)
-      :Publish to\nalerts.triggered topic;
-      :Send in-platform\nnotification;
-      :Queue email/SMS\nalert dispatch;
-    else (no)
-    endif
-  end fork
-else (no)
-  :Discard — no active\nsubscribers for this ticker;
-endif
-
-|Browser (Socket.io Client)|
-:Receive price event\nfrom WebSocket;
-note right: ~50ms render budget
-:Update React widget state;
-:TradingView chart\nre-renders live candle;
-:Price display updates\non workspace;
-
-|TimescaleDB|
-:Async write: persist\ntick to price_records\nhypertable;
-note right: Asynchronous —\nnot in latency path
-
-stop
-
-@enduml
+    style A fill:#22c55e,color:#fff
+    style Z1 fill:#ef4444,color:#fff
+    style Z2 fill:#ef4444,color:#fff
+    style Z3 fill:#ef4444,color:#fff
 ```
 
 ---
@@ -1907,89 +1843,86 @@ stop
 
 **Rationale:** Defines the complete message contract from login to fully rendered workspace. Ensures MFA enforcement, JWT token management, and workspace restoration are consistently implemented.
 
-```plantuml
-@startuml B3_SequenceDiagram_AuthWorkspaceLoad
-title Authentication & Workspace Load Sequence\nVersion 1.0 | February 2026
+```mermaid
+sequenceDiagram
+    actor browser as User Browser
+    participant nextjs as Next.js Frontend
+    participant auth as NestJS Auth Service
+    participant postgres as PostgreSQL
+    participant redis as Redis
+    participant socketio as Socket.io Server
+    participant bus as Widget Event Bus
 
-skinparam sequenceArrowThickness 2
-skinparam responseMessageBelowArrow true
+    rect rgb(240, 248, 255)
+        note over browser,bus: Step 1 — Credential Submission
+        browser->>nextjs: POST /auth/login {email, password}
+        nextjs->>auth: Forward credentials
+        auth->>postgres: Lookup user by email
+        postgres-->>auth: User record + hashed password
+        auth->>auth: bcrypt.compare(password, hash)
 
-actor "User Browser" as browser
-participant "Next.js Frontend" as nextjs
-participant "NestJS Auth\nService" as auth
-database "PostgreSQL\n(User Store)" as postgres
-database "Redis\n(Session Cache)" as redis
-participant "Socket.io\nServer" as socketio
-participant "Widget\nEvent Bus" as bus
+        alt Invalid credentials
+            auth-->>nextjs: 401 Unauthorized
+            nextjs-->>browser: Display error message
+        else Valid credentials
+            auth-->>nextjs: MFA challenge token (temp JWT, 5min TTL)
+            nextjs-->>browser: Render MFA input screen
+        end
+    end
 
-== Step 1: Credential Submission ==
-browser -> nextjs: POST /auth/login\n{email, password}
-nextjs -> auth: Forward credentials
-auth -> postgres: Lookup user by email
-postgres --> auth: User record + hashed password
-auth -> auth: bcrypt.compare(password, hash)
+    rect rgb(255, 248, 240)
+        note over browser,bus: Step 2 — MFA Verification
+        browser->>nextjs: POST /auth/mfa/verify {challengeToken, totpCode}
+        nextjs->>auth: Verify TOTP code against user secret
+        auth->>auth: speakeasy.verify(code, secret, window:1)
 
-alt Invalid credentials
-  auth --> nextjs: 401 Unauthorized
-  nextjs --> browser: Display error message
-else Valid credentials
-  auth --> nextjs: MFA challenge token (temp JWT, 5min TTL)
-  nextjs --> browser: Render MFA input screen
-end
+        alt Invalid TOTP
+            auth-->>nextjs: 401 — Invalid MFA code
+            nextjs-->>browser: Show error; offer retry (max 5)
+        else Valid TOTP
+            auth->>auth: Generate access token (JWT RS256, TTL 15min)
+            auth->>auth: Generate refresh token (opaque, TTL 7 days)
+            auth->>redis: SETEX refresh_token:{userId} 604800 {tokenHash}
+            auth-->>nextjs: Set HttpOnly cookie: refreshToken + {accessToken, user profile}
+            nextjs-->>browser: Store accessToken in memory (not localStorage) / Redirect to workspace
+        end
+    end
 
-== Step 2: MFA Verification ==
-browser -> nextjs: POST /auth/mfa/verify\n{challengeToken, totpCode}
-nextjs -> auth: Verify TOTP code against user secret
-auth -> auth: speakeasy.verify(code, secret, window:1)
+    rect rgb(240, 255, 240)
+        note over browser,bus: Step 3 — Workspace Load
+        browser->>nextjs: GET /workspace [Authorization: Bearer {accessToken}]
+        nextjs->>auth: Validate JWT (public key verification)
+        auth-->>nextjs: Valid — userId, roles
 
-alt Invalid TOTP
-  auth --> nextjs: 401 — Invalid MFA code
-  nextjs --> browser: Show error; offer retry (max 5)
-else Valid TOTP
-  auth -> auth: Generate access token (JWT RS256, TTL 15min)
-  auth -> auth: Generate refresh token (opaque, TTL 7 days)
-  auth -> redis: SETEX refresh_token:{userId} 604800 {tokenHash}
-  auth --> nextjs: Set HttpOnly cookie: refreshToken\nReturn: {accessToken, user profile}
-  nextjs --> browser: Store accessToken in memory (not localStorage)\nRedirect to workspace
-end
+        par Load workspace layout
+            nextjs->>postgres: SELECT workspace_layout WHERE userId = :id
+            postgres-->>nextjs: Layout JSON (widget types, positions, data contexts)
+            nextjs-->>browser: Render workspace canvas with widget skeletons
+        and Load initial data for widgets
+            nextjs->>redis: HGETALL price:{ticker} for each widget ticker
+            redis-->>nextjs: Cached latest prices (< 1ms)
+            nextjs-->>browser: Populate widgets with cached data instantly
+        end
+    end
 
-== Step 3: Workspace Load ==
-browser -> nextjs: GET /workspace\n[Authorization: Bearer {accessToken}]
-nextjs -> auth: Validate JWT (public key verification)
-auth --> nextjs: Valid — userId, roles
+    rect rgb(248, 240, 255)
+        note over browser,bus: Step 4 — WebSocket Connection & Subscriptions
+        browser->>socketio: WebSocket connect {accessToken}
+        socketio->>auth: Validate token
+        auth-->>socketio: Valid — userId, roles
+        socketio-->>browser: Connection confirmed
 
-par Load workspace layout
-  nextjs -> postgres: SELECT workspace_layout WHERE userId = :id
-  postgres --> nextjs: Layout JSON (widget types, positions, data contexts)
-  nextjs --> browser: Render workspace canvas with widget skeletons
-and Load initial data for widgets
-  nextjs -> redis: HGETALL price:{ticker} for each widget ticker
-  redis --> nextjs: Cached latest prices (< 1ms)
-  nextjs --> browser: Populate widgets with cached data instantly
-end
+        loop For each widget in restored layout
+            browser->>socketio: EMIT subscribe {room: "security:{ticker}"}
+            socketio->>socketio: Join Socket.io room
+            socketio-->>browser: Subscription confirmed
+            browser->>bus: Dispatch WIDGET_SUBSCRIBED event
+            bus-->>browser: Widget transitions to ACTIVE state
+        end
+        browser-->>browser: Workspace fully rendered — All widgets receiving live data
+    end
 
-== Step 4: WebSocket Connection & Subscriptions ==
-browser -> socketio: WebSocket connect\n{accessToken}
-socketio -> auth: Validate token
-auth --> socketio: Valid — userId, roles
-socketio --> browser: Connection confirmed
-
-loop For each widget in restored layout
-  browser -> socketio: EMIT subscribe\n{room: "security:{ticker}"}
-  socketio -> socketio: Join Socket.io room
-  socketio --> browser: Subscription confirmed
-  browser -> bus: Dispatch WIDGET_SUBSCRIBED event
-  bus --> browser: Widget transitions to ACTIVE state
-end
-
-browser --> browser: Workspace fully rendered\nAll widgets receiving live data
-
-note over browser, socketio
-  Total time from login submission to fully active workspace: < 5 seconds (p95)
-  WebSocket subscriptions complete within 3 seconds of workspace render
-end note
-
-@enduml
+    note over browser,socketio: ⏱ Total time: login → fully active workspace < 5 seconds (p95)
 ```
 
 ---
@@ -2000,62 +1933,44 @@ end note
 
 **Rationale:** Provides the development team with an implementation-ready message-level contract for the most performance-sensitive feature. Budgets latency at each step to engineer the < 500ms SLA in rather than hoping for it.
 
-```plantuml
-@startuml B4_SequenceDiagram_RealTimePriceUpdate
-title Real-Time Price Update: BRVM Feed to Widget Screen\nVersion 1.0 | February 2026
-' Latency budget annotations: Kafka ~20ms | Redis ~1ms | Socket.io ~30ms | Render ~50ms
-' Total engineered path: ~101ms | Hard limit: 500ms p95
+```mermaid
+sequenceDiagram
+    participant brvm as BRVM Feed Connector
+    participant kafka as Kafka Broker (brvm.prices)
+    participant consumer as NestJS Consumer (market-data-service)
+    participant redis as Redis Cache
+    participant kafka2 as Kafka Broker (prices.processed)
+    participant socketio as Socket.io Server + Redis Adapter
+    participant client as Browser Socket.io Client
+    participant chart as TradingView Chart Widget
 
-skinparam sequenceArrowThickness 2
-skinparam responseMessageBelowArrow true
+    note over brvm,chart: Latency budget: Kafka ~20ms | Redis ~1ms | Socket.io ~30ms | Render ~50ms | Hard limit: 500ms p95
 
-participant "BRVM Feed\nConnector" as brvm
-participant "Kafka Broker\n(brvm.prices)" as kafka
-participant "NestJS Consumer\n(market-data-service)" as consumer
-database "Redis Cache" as redis
-participant "Kafka Broker\n(prices.processed)" as kafka2
-participant "Socket.io Server\n+ Redis Adapter" as socketio
-participant "Browser\nSocket.io Client" as client
-participant "TradingView\nChart Widget" as chart
+    brvm->>kafka: PRODUCE {ticker: "SNTS", price: 18500, ts: T+0ms}
+    note right of kafka: Offset committed ≈ T+5ms
 
-' T=0: Market event
-brvm -> kafka: PRODUCE message\n{ticker: "SNTS", price: 18500, ts: T+0ms}
-note right of kafka: Kafka offset committed\nT ≈ +5ms
+    kafka->>consumer: CONSUME message from partition for "SNTS"
+    note right of consumer: Schema validation + Normalization ≈ T+20ms
 
-' T+5: Consumer reads
-kafka -> consumer: CONSUME message\nfrom partition for "SNTS"
-note right of consumer: Schema validation\nNormalization\nT ≈ +20ms total
+    consumer->>redis: HSET price:SNTS {last: 18500, change: +150, pct: +0.82%, ts: T+20ms}
+    note right of redis: TTL reset to 2s | Write < 1ms
+    redis-->>consumer: OK (T+21ms)
 
-' T+20: Parallel cache write and re-publish
-consumer -> redis: HSET price:SNTS\n{last: 18500, change: +150, pct: +0.82%, ts: T+20ms}
-note right of redis: TTL reset to 2s\nWrite latency < 1ms
-redis --> consumer: OK (T+21ms)
+    consumer->>kafka2: PRODUCE enriched event → prices.processed (T+25ms)
 
-consumer -> kafka2: PRODUCE enriched event\nto prices.processed\n(T+25ms)
+    kafka2->>socketio: CONSUME enriched event
+    socketio->>socketio: Identify room: security:SNTS
+    note right of socketio: Via Redis Adapter — all NestJS instances can emit to this room
 
-' T+25: Socket.io fan-out
-kafka2 -> socketio: CONSUME enriched event
-socketio -> socketio: Identify room: security:SNTS
-note right of socketio: Via Redis Adapter:\nall NestJS instances\ncan emit to this room
+    socketio->>client: EMIT "price:update" {ticker:"SNTS", price:18500, change:+150, pct:+0.82%} (T+55ms)
+    note right of client: Network RTT varies by geography (50–300ms), not in platform control
 
-socketio -> client: EMIT "price:update"\n{ticker:"SNTS", price:18500,\nchange:+150, pct:+0.82%}\n(T+55ms)
-note right of client: Network RTT varies\nby user location.\n~50-300ms not in\nplatform control.
+    client->>client: Socket.io event received
+    client->>client: React state update dispatch (T+client_receive + 5ms)
+    client->>chart: Re-render current candle / extend OHLCV high if applicable
+    chart-->>client: Canvas repaint complete (T+client_receive + 50ms)
 
-' Client-side processing
-client -> client: Socket.io event received
-client -> client: React state update dispatch\n(T+client_receive + 5ms)
-client -> chart: Re-render current candle\nextend OHLCV high if applicable
-chart --> client: Canvas repaint complete\n(T+client_receive + 50ms)
-
-note over brvm, chart
-  Engineered pipeline latency: ~55ms (Kafka+Redis+Socket.io)
-  Network transit: 50-300ms (geography-dependent, not in platform scope)
-  Client render: ~50ms
-  Total p95 hard limit: 500ms
-  Under normal conditions (local network): < 150ms
-end note
-
-@enduml
+    note over brvm,chart: ✅ Engineered pipeline: ~55ms | Network transit: 50–300ms | Client render: ~50ms | p95 hard limit: 500ms
 ```
 
 ---
@@ -2066,92 +1981,76 @@ end note
 
 **Rationale:** The floating workspace has no prior codebase. Without a formal state machine, widget error handling, reconnection logic, and lifecycle management will be inconsistently implemented across six modules developed potentially by different team members.
 
-```plantuml
-@startuml B5_StateMachine_WidgetLifecycle
-title Widget Lifecycle State Machine\nVersion 1.0 | February 2026
+```mermaid
+stateDiagram-v2
+    [*] --> Uninitialized : Widget added to workspace\n[user has permission]
 
-skinparam stateFontSize 13
-skinparam stateArrowFontSize 11
+    Uninitialized --> Loading : initWidget() called\n[accessToken valid]
 
-[*] --> Uninitialized : Widget added to workspace\n[user has permission]
+    note right of Loading
+        entry: subscribe to Socket.io room
+        entry: fetch initial data from Redis/API
+        entry: start load timeout timer (10s)
+    end note
 
-state Uninitialized {
-  : entry / register widget ID\n  in workspace registry
-}
+    Loading --> Active : Initial data received +\nWebSocket subscription confirmed
 
-Uninitialized --> Loading : initWidget() called\n[accessToken valid]
+    Loading --> Error : Load timeout exceeded OR\nWebSocket refused OR API 5xx
 
-state Loading {
-  : entry / subscribe to Socket.io room\n  entry / fetch initial data from Redis/API\n  entry / start load timeout timer (10s)
-}
+    note right of Active
+        entry: start heartbeat timer (30s)
+        do: update display on price event
+        exit: clear heartbeat timer
+    end note
 
-Loading --> Active : Initial data received\nWebSocket subscription confirmed
+    Active --> Stale : No data within 2× expected\nrefresh window (feed may be slow)
+    Active --> Error : WebSocket lost OR\ndata feed error received
+    Active --> Detached : User drags widget to\nsecondary browser window
+    Active --> Minimized : User clicks minimize\non widget header
+    Active --> Destroyed : User clicks close (×) OR\nworkspace session ends
 
-Loading --> Error : Load timeout exceeded\nOR WebSocket connection refused\nOR API returns 5xx
+    note right of Stale
+        entry: show "Stale data" indicator
+        entry: display last update timestamp
+        do: continue attempting to receive updates
+        Stale threshold — Real-time prices: >5s
+        Near-real-time: >10 min
+    end note
 
-state Active {
-  : entry / start heartbeat timer (30s)\n  entry / begin accepting real-time events\n  do / update display on price event\n  exit / clear heartbeat timer
-}
+    Stale --> Active : New data event received\n(feed recovered)
+    Stale --> Error : Connection confirmed lost\n(heartbeat failure)
 
-Active --> Stale : No data event received\nwithin 2× expected refresh window\n[data feed may be slow]
+    note right of Error
+        entry: show error state UI
+        entry: increment reconnect_attempt counter
+        entry: log error to monitoring
+        Max 3 auto-reconnect attempts.
+        After 3 failures → Destroyed.
+        Manual re-add required.
+    end note
 
-Active --> Error : WebSocket connection lost\nOR data feed error event received
+    Error --> Loading : Auto-reconnect triggered\n[attempts ≤ 3]\nBackoff: 1s → 2s → 4s
+    Error --> Destroyed : Max reconnects exceeded\n(attempt > 3) — User notified
 
-Active --> Detached : User drags widget\nto secondary browser window
+    note right of Detached
+        entry: open widget in new browser window
+        entry: maintain WebSocket subscription
+        do: receive real-time events normally
+    end note
 
-Active --> Minimized : User clicks minimize\non widget header
+    Detached --> Active : User re-attaches widget\nto primary workspace
+    Detached --> Destroyed : User closes detached window
 
-Active --> Destroyed : User clicks close (×)\nOR workspace session ends
+    note right of Minimized
+        entry: collapse widget to title bar only
+        entry: PAUSE real-time subscription
+        (saves bandwidth when not visible)
+    end note
 
-state Stale {
-  : entry / show "Stale data" visual indicator\n  entry / display last update timestamp\n  do / continue attempting to receive updates
-}
+    Minimized --> Active : User clicks expand
+    Minimized --> Destroyed : User closes minimized widget
 
-Stale --> Active : New data event received\n(feed recovered)
-
-Stale --> Error : Connection confirmed lost\n(heartbeat failure)
-
-state Error {
-  : entry / show error state UI\n  entry / increment reconnect_attempt counter\n  entry / log error to monitoring
-}
-
-Error --> Loading : Auto-reconnect triggered\n[reconnect_attempt <= 3]\nafter exponential backoff:\n1s, 2s, 4s
-
-Error --> Destroyed : Max reconnect attempts exceeded\n(reconnect_attempt > 3)\nUser notified with toast message
-
-state Detached {
-  : entry / open widget in new browser window\n  entry / maintain WebSocket subscription\n  do / receive real-time events normally
-}
-
-Detached --> Active : User re-attaches widget\nto primary workspace
-
-Detached --> Destroyed : User closes detached window
-
-state Minimized {
-  : entry / collapse widget to title bar only\n  entry / PAUSE real-time subscription\n  (save bandwidth when not visible)
-}
-
-Minimized --> Active : User clicks expand\non minimized widget
-
-Minimized --> Destroyed : User closes minimized widget
-
-Destroyed --> [*] : entry / unsubscribe from all rooms\n  entry / remove from workspace registry\n  entry / release memory references
-
-note right of Error
-  Maximum 3 auto-reconnect attempts.
-  After 3 failures, widget enters
-  Destroyed state and user is notified.
-  Manual re-add is required.
-end note
-
-note right of Stale
-  Stale threshold per data type:
-  - Real-time prices: > 5s without update
-  - Near-real-time: > 10 min
-  - Delayed data: per published schedule
-end note
-
-@enduml
+    Destroyed --> [*] : Unsubscribe from all rooms\nRemove from workspace registry\nRelease memory references
 ```
 
 ---
@@ -2162,296 +2061,280 @@ end note
 
 **Rationale:** Establishes the shared domain language between analysts, developers, and database architects. Ambiguity in the domain model propagates errors into every layer of the system.
 
-```plantuml
-@startuml S1_ClassDiagram_DomainModel
-title Bloomfield Terminal — Core Domain Model\nVersion 1.0 | February 2026
+```mermaid
+classDiagram
+    direction TB
 
-skinparam classAttributeIconSize 0
-skinparam classFontSize 12
+    class User {
+        <<Entity>>
+        +UUID userId
+        +VARCHAR email
+        +VARCHAR passwordHash
+        +UserRole role
+        +VARCHAR mfaSecret
+        +BOOLEAN mfaEnabled
+        +TIMESTAMPTZ createdAt
+        +TIMESTAMPTZ lastLoginAt
+        +BOOLEAN isActive
+    }
+    class UserRole {
+        <<enumeration>>
+        INDIVIDUAL_INVESTOR
+        FINANCIAL_ANALYST
+        INSTITUTIONAL_INVESTOR
+        SGI_TRADER
+        PUBLIC_ADMINISTRATION
+        BLOOMFIELD_ADMIN
+        SYSTEM_ADMIN
+    }
+    class AdminUser {
+        <<Entity>>
+        +UUID adminId
+        +VARCHAR email
+        +AdminRole adminRole
+        +TIMESTAMPTZ createdAt
+    }
+    class AdminRole {
+        <<enumeration>>
+        SUPER_ADMIN
+        DATA_MANAGER
+        CONTENT_REVIEWER
+        READ_ONLY_AUDITOR
+    }
+    class Workspace {
+        <<Entity>>
+        +UUID workspaceId
+        +UUID userId
+        +VARCHAR name
+        +JSONB layoutJson
+        +BOOLEAN isDefault
+        +TIMESTAMPTZ createdAt
+        +TIMESTAMPTZ updatedAt
+    }
+    class Widget {
+        <<Entity>>
+        +VARCHAR widgetId
+        +UUID workspaceId
+        +WidgetType widgetType
+        +INTEGER positionX
+        +INTEGER positionY
+        +INTEGER width
+        +INTEGER height
+        +JSONB dataContext
+        +WidgetState state
+    }
+    class WidgetType {
+        <<enumeration>>
+        PRICE_CHART
+        ORDER_BOOK
+        PORTFOLIO_HOLDINGS
+        NEWS_FEED
+        MACRO_CHART
+        SECTOR_HEATMAP
+        TOP_MOVERS
+        ALERT_PANEL
+    }
+    class WidgetState {
+        <<enumeration>>
+        UNINITIALIZED
+        LOADING
+        ACTIVE
+        STALE
+        ERROR
+        DETACHED
+        MINIMIZED
+    }
+    class Security {
+        <<Entity>>
+        +UUID securityId
+        +VARCHAR ticker
+        +VARCHAR isin
+        +VARCHAR name
+        +SecurityType securityType
+        +VARCHAR sectorCode
+        +UUID exchangeId
+        +VARCHAR currency
+        +BOOLEAN isActive
+    }
+    class SecurityType {
+        <<enumeration>>
+        EQUITY
+        BOND
+        FUND
+        ETF
+    }
+    class Exchange {
+        <<Entity>>
+        +UUID exchangeId
+        +VARCHAR code
+        +VARCHAR name
+        +VARCHAR country
+        +VARCHAR timezone
+        +TIME marketOpenTime
+        +TIME marketCloseTime
+    }
+    class PriceRecord {
+        <<ValueObject>>
+        +UUID securityId
+        +TIMESTAMPTZ timestamp
+        +NUMERIC open
+        +NUMERIC high
+        +NUMERIC low
+        +NUMERIC close
+        +BIGINT volume
+        +TimeInterval interval
+    }
+    class TimeInterval {
+        <<enumeration>>
+        TICK
+        ONE_MIN
+        FIVE_MIN
+        FIFTEEN_MIN
+        ONE_HOUR
+        ONE_DAY
+        ONE_WEEK
+        ONE_MONTH
+    }
+    class Sector {
+        <<Entity>>
+        +VARCHAR sectorCode
+        +VARCHAR name
+        +TEXT description
+    }
+    class Portfolio {
+        <<Entity>>
+        +UUID portfolioId
+        +UUID userId
+        +VARCHAR name
+        +VARCHAR benchmarkId
+        +VARCHAR currency
+        +TIMESTAMPTZ createdAt
+    }
+    class Position {
+        <<Entity>>
+        +UUID positionId
+        +UUID portfolioId
+        +UUID securityId
+        +NUMERIC quantity
+        +NUMERIC acquisitionPrice
+        +DATE acquisitionDate
+        +BOOLEAN isOpen
+    }
+    class Transaction {
+        <<Entity>>
+        +UUID transactionId
+        +UUID portfolioId
+        +UUID securityId
+        +TransactionType transactionType
+        +NUMERIC quantity
+        +NUMERIC price
+        +DATE transactionDate
+        +TEXT notes
+    }
+    class TransactionType {
+        <<enumeration>>
+        BUY
+        SELL
+        DIVIDEND
+        CORPORATE_ACTION
+    }
+    class Alert {
+        <<Entity>>
+        +UUID alertId
+        +UUID userId
+        +UUID securityId
+        +AlertCondition condition
+        +NUMERIC thresholdValue
+        +BOOLEAN isActive
+        +TIMESTAMPTZ createdAt
+        +TIMESTAMPTZ lastTriggeredAt
+    }
+    class AlertCondition {
+        <<enumeration>>
+        PRICE_ABOVE
+        PRICE_BELOW
+        CHANGE_PCT_ABOVE
+        CHANGE_PCT_BELOW
+    }
+    class Country {
+        <<Entity>>
+        +VARCHAR countryCode
+        +VARCHAR name
+        +UUID regionId
+        +VARCHAR currency
+    }
+    class Region {
+        <<Entity>>
+        +UUID regionId
+        +VARCHAR name
+        +TEXT description
+    }
+    class MacroIndicator {
+        <<Entity>>
+        +UUID indicatorId
+        +VARCHAR countryCode
+        +VARCHAR indicatorType
+        +DATE periodDate
+        +NUMERIC value
+        +VARCHAR unit
+        +UUID sourceId
+        +TIMESTAMPTZ publishedAt
+        +UUID validatedBy
+    }
+    class DataSource {
+        <<Entity>>
+        +UUID sourceId
+        +VARCHAR name
+        +VARCHAR sourceType
+        +VARCHAR endpoint
+        +VARCHAR updateFrequency
+        +TIMESTAMPTZ lastIngestedAt
+    }
+    class AuditLog {
+        <<ValueObject>>
+        +UUID logId
+        +UUID actorId
+        +VARCHAR actorType
+        +VARCHAR eventType
+        +VARCHAR resourceType
+        +VARCHAR resourceId
+        +JSONB beforeValue
+        +JSONB afterValue
+        +INET ipAddress
+        +TIMESTAMPTZ occurredAt
+    }
 
-' ─── User & Access Management ─────────────────────────────────────
-class User <<Entity>> {
-  + userId: UUID
-  + email: VARCHAR(255) UNIQUE NOT NULL
-  + passwordHash: VARCHAR(255) NOT NULL
-  + role: UserRole NOT NULL
-  + mfaSecret: VARCHAR(64) NOT NULL
-  + mfaEnabled: BOOLEAN DEFAULT true
-  + createdAt: TIMESTAMPTZ NOT NULL
-  + lastLoginAt: TIMESTAMPTZ
-  + isActive: BOOLEAN DEFAULT true
-}
+    User "1" --> "0..*" Workspace : owns
+    User "1" --> "0..*" Portfolio : owns
+    User "1" --> "0..*" Alert : configures
+    User -- UserRole
 
-enum UserRole {
-  INDIVIDUAL_INVESTOR
-  FINANCIAL_ANALYST
-  INSTITUTIONAL_INVESTOR
-  SGI_TRADER
-  PUBLIC_ADMINISTRATION
-  BLOOMFIELD_ADMIN
-  SYSTEM_ADMIN
-}
+    Workspace "1" *-- "0..*" Widget : contains
+    Widget -- WidgetType
+    Widget -- WidgetState
 
-class AdminUser <<Entity>> {
-  + adminId: UUID
-  + email: VARCHAR(255) UNIQUE NOT NULL
-  + adminRole: AdminRole NOT NULL
-  + createdAt: TIMESTAMPTZ NOT NULL
-}
+    Portfolio "1" *-- "0..*" Position : holds
+    Portfolio "1" *-- "0..*" Transaction : records
 
-enum AdminRole {
-  SUPER_ADMIN
-  DATA_MANAGER
-  CONTENT_REVIEWER
-  READ_ONLY_AUDITOR
-}
+    Position "0..*" --> "1" Security : references
+    Transaction "0..*" --> "1" Security : involves
 
-' ─── Workspace & Widget ───────────────────────────────────────────
-class Workspace <<Entity>> {
-  + workspaceId: UUID
-  + userId: UUID FK NOT NULL
-  + name: VARCHAR(100) NOT NULL
-  + layoutJson: JSONB NOT NULL
-  + isDefault: BOOLEAN DEFAULT false
-  + createdAt: TIMESTAMPTZ NOT NULL
-  + updatedAt: TIMESTAMPTZ NOT NULL
-}
+    Security "0..*" --> "1" Exchange : listed on
+    Security "0..*" --> "1" Sector : classified in
+    Security "1" *-- "0..*" PriceRecord : has (TimescaleDB hypertable)
 
-class Widget <<Entity>> {
-  + widgetId: VARCHAR(36)
-  + workspaceId: UUID FK NOT NULL
-  + widgetType: WidgetType NOT NULL
-  + positionX: INTEGER NOT NULL
-  + positionY: INTEGER NOT NULL
-  + width: INTEGER NOT NULL
-  + height: INTEGER NOT NULL
-  + dataContext: JSONB
-  + state: WidgetState NOT NULL
-}
+    Alert "0..*" --> "1" Security : monitors
+    Alert -- AlertCondition
 
-enum WidgetType {
-  PRICE_CHART
-  ORDER_BOOK
-  PORTFOLIO_HOLDINGS
-  NEWS_FEED
-  MACRO_CHART
-  SECTOR_HEATMAP
-  TOP_MOVERS
-  ALERT_PANEL
-}
+    MacroIndicator "0..*" --> "1" Country : belongs to
+    MacroIndicator "0..*" --> "1" DataSource : sourced from
+    Country "0..*" --> "1" Region : part of
 
-enum WidgetState {
-  UNINITIALIZED
-  LOADING
-  ACTIVE
-  STALE
-  ERROR
-  DETACHED
-  MINIMIZED
-}
+    AdminUser "1" --> "0..*" DataSource : manages
+    AdminUser -- AdminRole
 
-' ─── Market & Securities ──────────────────────────────────────────
-class Security <<Entity>> {
-  + securityId: UUID
-  + ticker: VARCHAR(10) UNIQUE NOT NULL
-  + isin: VARCHAR(12) UNIQUE NOT NULL
-  + name: VARCHAR(255) NOT NULL
-  + securityType: SecurityType NOT NULL
-  + sectorCode: VARCHAR(20) FK NOT NULL
-  + exchangeId: UUID FK NOT NULL
-  + currency: VARCHAR(3) DEFAULT 'XOF'
-  + isActive: BOOLEAN DEFAULT true
-}
-
-enum SecurityType {
-  EQUITY
-  BOND
-  FUND
-  ETF
-}
-
-class Exchange <<Entity>> {
-  + exchangeId: UUID
-  + code: VARCHAR(10) UNIQUE NOT NULL
-  + name: VARCHAR(100) NOT NULL
-  + country: VARCHAR(3) NOT NULL
-  + timezone: VARCHAR(50) NOT NULL
-  + marketOpenTime: TIME NOT NULL
-  + marketCloseTime: TIME NOT NULL
-}
-
-class PriceRecord <<ValueObject>> {
-  + securityId: UUID FK NOT NULL
-  + timestamp: TIMESTAMPTZ NOT NULL
-  + open: NUMERIC(18,4) NOT NULL
-  + high: NUMERIC(18,4) NOT NULL
-  + low: NUMERIC(18,4) NOT NULL
-  + close: NUMERIC(18,4) NOT NULL
-  + volume: BIGINT NOT NULL
-  + interval: TimeInterval NOT NULL
-  ' TimescaleDB hypertable — partitioned by timestamp
-}
-
-enum TimeInterval {
-  TICK
-  ONE_MIN
-  FIVE_MIN
-  FIFTEEN_MIN
-  ONE_HOUR
-  ONE_DAY
-  ONE_WEEK
-  ONE_MONTH
-}
-
-class Sector <<Entity>> {
-  + sectorCode: VARCHAR(20) PK NOT NULL
-  + name: VARCHAR(100) NOT NULL
-  + description: TEXT
-}
-
-' ─── Portfolio & Positions ────────────────────────────────────────
-class Portfolio <<Entity>> {
-  + portfolioId: UUID
-  + userId: UUID FK NOT NULL
-  + name: VARCHAR(100) NOT NULL
-  + benchmarkId: VARCHAR(50)
-  + currency: VARCHAR(3) DEFAULT 'XOF'
-  + createdAt: TIMESTAMPTZ NOT NULL
-}
-
-class Position <<Entity>> {
-  + positionId: UUID
-  + portfolioId: UUID FK NOT NULL
-  + securityId: UUID FK NOT NULL
-  + quantity: NUMERIC(18,6) NOT NULL
-  + acquisitionPrice: NUMERIC(18,4) NOT NULL
-  + acquisitionDate: DATE NOT NULL
-  + isOpen: BOOLEAN DEFAULT true
-}
-
-class Transaction <<Entity>> {
-  + transactionId: UUID
-  + portfolioId: UUID FK NOT NULL
-  + securityId: UUID FK NOT NULL
-  + transactionType: TransactionType NOT NULL
-  + quantity: NUMERIC(18,6) NOT NULL
-  + price: NUMERIC(18,4) NOT NULL
-  + transactionDate: DATE NOT NULL
-  + notes: TEXT
-  ' Immutable — no UPDATE or DELETE allowed
-}
-
-enum TransactionType {
-  BUY
-  SELL
-  DIVIDEND
-  CORPORATE_ACTION
-}
-
-' ─── Alerts ───────────────────────────────────────────────────────
-class Alert <<Entity>> {
-  + alertId: UUID
-  + userId: UUID FK NOT NULL
-  + securityId: UUID FK NOT NULL
-  + condition: AlertCondition NOT NULL
-  + thresholdValue: NUMERIC(18,4) NOT NULL
-  + isActive: BOOLEAN DEFAULT true
-  + createdAt: TIMESTAMPTZ NOT NULL
-  + lastTriggeredAt: TIMESTAMPTZ
-}
-
-enum AlertCondition {
-  PRICE_ABOVE
-  PRICE_BELOW
-  CHANGE_PCT_ABOVE
-  CHANGE_PCT_BELOW
-}
-
-' ─── Macroeconomic Data ───────────────────────────────────────────
-class Country <<Entity>> {
-  + countryCode: VARCHAR(3) PK NOT NULL
-  + name: VARCHAR(100) NOT NULL
-  + regionId: UUID FK NOT NULL
-  + currency: VARCHAR(3)
-}
-
-class Region <<Entity>> {
-  + regionId: UUID
-  + name: VARCHAR(100) NOT NULL
-  + description: TEXT
-}
-
-class MacroIndicator <<Entity>> {
-  + indicatorId: UUID
-  + countryCode: VARCHAR(3) FK NOT NULL
-  + indicatorType: VARCHAR(50) NOT NULL
-  + periodDate: DATE NOT NULL
-  + value: NUMERIC(20,6) NOT NULL
-  + unit: VARCHAR(30)
-  + sourceId: UUID FK NOT NULL
-  + publishedAt: TIMESTAMPTZ NOT NULL
-  + validatedBy: UUID FK NOT NULL
-}
-
-' ─── Data Governance ─────────────────────────────────────────────
-class DataSource <<Entity>> {
-  + sourceId: UUID
-  + name: VARCHAR(100) NOT NULL
-  + sourceType: VARCHAR(50) NOT NULL
-  + endpoint: VARCHAR(500)
-  + updateFrequency: VARCHAR(50)
-  + lastIngestedAt: TIMESTAMPTZ
-}
-
-class AuditLog <<ValueObject>> {
-  + logId: UUID
-  + actorId: UUID NOT NULL
-  + actorType: VARCHAR(20) NOT NULL
-  + eventType: VARCHAR(100) NOT NULL
-  + resourceType: VARCHAR(100)
-  + resourceId: VARCHAR(255)
-  + beforeValue: JSONB
-  + afterValue: JSONB
-  + ipAddress: INET NOT NULL
-  + occurredAt: TIMESTAMPTZ NOT NULL
-  ' Append-only — no UPDATE or DELETE allowed
-}
-
-' ─── Relationships ────────────────────────────────────────────────
-User "1" --> "0..*" Workspace : owns
-User "1" --> "0..*" Portfolio : owns
-User "1" --> "0..*" Alert : configures
-User "1" -- UserRole
-
-Workspace "1" *-- "0..*" Widget : contains
-Widget -- WidgetType
-Widget -- WidgetState
-
-Portfolio "1" *-- "0..*" Position : holds
-Portfolio "1" *-- "0..*" Transaction : records
-
-Position "0..*" --> "1" Security : references
-Transaction "0..*" --> "1" Security : involves
-
-Security "0..*" --> "1" Exchange : listed on
-Security "0..*" --> "1" Sector : classified in
-Security "1" *-- "0..*" PriceRecord : has (TimescaleDB)
-
-Alert "0..*" --> "1" Security : monitors
-Alert -- AlertCondition
-Alert -- AlertCondition
-
-MacroIndicator "0..*" --> "1" Country : belongs to
-MacroIndicator "0..*" --> "1" DataSource : sourced from
-Country "0..*" --> "1" Region : part of
-
-AdminUser "1" --> "0..*" DataSource : manages
-AdminUser -- AdminRole
-
-AuditLog ..> User : records actions of
-AuditLog ..> AdminUser : records actions of
-
-@enduml
+    AuditLog ..> User : records actions of
+    AuditLog ..> AdminUser : records actions of
 ```
 
 ---
@@ -2462,173 +2345,141 @@ AuditLog ..> AdminUser : records actions of
 
 **Rationale:** Enforces service boundaries and dependency rules. Without explicit package boundaries, services develop hidden couplings that break independent horizontal scaling and make the Kubernetes deployment strategy unworkable.
 
-```plantuml
-@startuml S2_PackageDiagram_SystemArchitecture
-title Bloomfield Terminal — System Architecture Package Diagram\nVersion 1.0 | February 2026
+```mermaid
+flowchart TB
+    subgraph EXT["🌐 External Systems"]
+        BRVM_F["BRVM Data Feed"]
+        BCEAO_F["BCEAO API"]
+        IMF_F["IMF / World Bank APIs"]
+        FX_F["FX / Commodity Providers"]
+        CDN_F["Cloudflare CDN + WAF"]
+        EMAIL_F["Email / SMS Gateway"]
+    end
 
-skinparam packageStyle rectangle
-skinparam packageFontSize 13
+    subgraph CLIENT["🖥️ Client Layer"]
+        subgraph NEXT["next-app"]
+            SSR["SSR Shell (Next.js)"]
+            ROUTING["Routing & Auth Guards"]
+        end
+        subgraph WE["workspace-engine"]
+            GL["Golden Layout / Dockview"]
+            WEB["Widget Event Bus"]
+            LPM["Layout Persistence Manager"]
+        end
+        subgraph WL["widget-library"]
+            MW["Module 1–6 Widgets"]
+        end
+        subgraph SUI["shared-ui"]
+            DS["Design System / Components"]
+            TV["TradingView Chart Wrapper"]
+            D3["D3.js / ApexCharts Wrappers"]
+            SOCK["Socket.io Client Hook"]
+        end
+    end
 
-' ─── Client Layer ────────────────────────────────────────────────
-package "Client Layer" <<layer>> #E8F4FD {
-  package "next-app" {
-    [SSR Shell (Next.js)]
-    [Routing & Auth Guards]
-  }
-  package "workspace-engine" {
-    [Golden Layout / Dockview]
-    [Widget Event Bus]
-    [Layout Persistence Manager]
-  }
-  package "widget-library" {
-    [Module 1 Widgets]
-    [Module 2 Widgets]
-    [Module 3 Widgets]
-    [Module 4 Widgets]
-    [Module 5 Widgets]
-    [Module 6 Widgets]
-  }
-  package "shared-ui" {
-    [Design System / Components]
-    [TradingView Chart Wrapper]
-    [D3.js / ApexCharts Wrappers]
-    [Socket.io Client Hook]
-  }
-}
+    subgraph APIGW["🔀 API Gateway Layer"]
+        subgraph NEST["nestjs-gateway"]
+            REST["REST API Router"]
+            WSH["WebSocket Hub (Socket.io)"]
+            JWT_G["JWT Authentication Guard"]
+            RL["Rate Limiter"]
+            APIDOC["API Docs (Swagger/OpenAPI)"]
+        end
+    end
 
-' ─── API Gateway Layer ────────────────────────────────────────────
-package "API Gateway Layer" <<layer>> #FEF9E7 {
-  package "nestjs-gateway" {
-    [REST API Router]
-    [WebSocket Hub (Socket.io)]
-    [JWT Authentication Guard]
-    [Rate Limiter]
-    [API Docs (Swagger/OpenAPI)]
-  }
-}
+    subgraph SVC["⚙️ Service Layer"]
+        subgraph MDS["market-data-service"]
+            KC["Kafka Consumer (brvm.prices)"]
+            PN["Price Normalizer"]
+            RCW["Redis Cache Writer"]
+            SB["Socket.io Broadcaster"]
+            AE["Alert Evaluator"]
+        end
+        subgraph PS["portfolio-service"]
+            PCRUD["Portfolio CRUD"]
+            PNL["P&L Calculator"]
+            BC["Benchmark Comparator"]
+            RG["Report Generator (PDF/XLSX)"]
+        end
+        subgraph AS["analytics-service (Python / FastAPI)"]
+            FRE["Financial Ratio Engine"]
+            VAR["VaR Calculator"]
+            SA["Sector Aggregator"]
+            HQO["Historical Query Optimizer"]
+        end
+        subgraph MS["macro-service"]
+            MIC["Macro Indicator CRUD"]
+            IWA["IMF / World Bank Adapter"]
+            BFA["BCEAO Feed Adapter"]
+            DFM["Data Freshness Monitor"]
+        end
+        subgraph ADMIN_SVC["admin-service"]
+            DIA["Data Ingestion API"]
+            VP["Validation Pipeline"]
+            PWE["Publication Workflow Engine"]
+            URM["User & Role Manager"]
+            ALR["Audit Log Reader"]
+        end
+    end
 
-' ─── Service Layer ────────────────────────────────────────────────
-package "Service Layer" <<layer>> #EBF5EB {
-  package "market-data-service" {
-    [Kafka Consumer (brvm.prices)]
-    [Price Normalizer]
-    [Redis Cache Writer]
-    [Socket.io Broadcaster]
-    [Alert Evaluator]
-  }
-  package "portfolio-service" {
-    [Portfolio CRUD]
-    [P&L Calculator]
-    [Benchmark Comparator]
-    [Report Generator (PDF/XLSX)]
-  }
-  package "analytics-service\n(Python / FastAPI)" {
-    [Financial Ratio Engine]
-    [VaR Calculator]
-    [Sector Aggregator]
-    [Historical Query Optimizer]
-  }
-  package "macro-service" {
-    [Macro Indicator CRUD]
-    [IMF / World Bank Adapter]
-    [BCEAO Feed Adapter]
-    [Data Freshness Monitor]
-  }
-  package "admin-service" {
-    [Data Ingestion API]
-    [Validation Pipeline]
-    [Publication Workflow Engine]
-    [User & Role Manager]
-    [Audit Log Reader]
-  }
-}
+    subgraph INFRA["🗄️ Infrastructure Layer"]
+        subgraph KAFKA["kafka-broker"]
+            T1["Topic: brvm.prices"]
+            T2["Topic: brvm.orderbook"]
+            T3["Topic: prices.processed"]
+            T4["Topic: alerts.triggered"]
+            T5["Topic: dlq.market-data"]
+        end
+        subgraph REDIS_C["redis-cluster"]
+            R1["Price Cache (price:{ticker})"]
+            R2["Session Store (JWT refresh)"]
+            R3["Socket.io Adapter State"]
+            R4["API Response Cache"]
+        end
+        subgraph TSDB["timescaledb"]
+            TS1["price_records hypertable"]
+            TS2["Continuous Aggregates"]
+            TS3["Read Replica(s)"]
+        end
+        subgraph PG["postgresql"]
+            PG1["Users & Auth Schema"]
+            PG2["Portfolios & Positions Schema"]
+            PG3["Workspace Layouts Schema"]
+            PG4["Macro Indicators Schema"]
+            PG5["Content & Reports Schema"]
+            PG6["Audit Log Schema"]
+        end
+    end
 
-' ─── Infrastructure Layer ─────────────────────────────────────────
-package "Infrastructure Layer" <<layer>> #FDEDEC {
-  package "kafka-broker" {
-    [Topic: brvm.prices]
-    [Topic: brvm.orderbook]
-    [Topic: prices.processed]
-    [Topic: alerts.triggered]
-    [Topic: dlq.market-data]
-  }
-  package "redis-cluster" {
-    [Price Cache (price:{ticker})]
-    [Session Store (JWT refresh)]
-    [Socket.io Adapter State]
-    [API Response Cache]
-  }
-  package "timescaledb" {
-    [price_records hypertable]
-    [Continuous Aggregates]
-    [Read Replica(s)]
-  }
-  package "postgresql" {
-    [Users & Auth Schema]
-    [Portfolios & Positions Schema]
-    [Workspace Layouts Schema]
-    [Macro Indicators Schema]
-    [Content & Reports Schema]
-    [Audit Log Schema]
-  }
-}
+    subgraph CC["🔒 Cross-Cutting"]
+        subgraph AUTH_M["auth-module"]
+            JWS["JWT Signer / Verifier"]
+            MFA_M["MFA (TOTP + SMS)"]
+            RBAC["RBAC Permission Registry"]
+        end
+        subgraph AUDIT_M["audit-module"]
+            EP["Event Publisher"]
+            ILW["Immutable Log Writer"]
+        end
+        subgraph OBS["observability"]
+            PROM["Prometheus Metrics"]
+            GRAF["Grafana Dashboards"]
+            AM["Alertmanager"]
+            LOG["Structured Logger (JSON)"]
+        end
+    end
 
-' ─── Cross-Cutting Concerns ───────────────────────────────────────
-package "Cross-Cutting" <<layer>> #F5EEF8 {
-  package "auth-module" {
-    [JWT Signer / Verifier]
-    [MFA (TOTP + SMS)]
-    [RBAC Permission Registry]
-  }
-  package "audit-module" {
-    [Event Publisher]
-    [Immutable Log Writer]
-  }
-  package "observability" {
-    [Prometheus Metrics]
-    [Grafana Dashboards]
-    [Alertmanager]
-    [Structured Logger (JSON)]
-  }
-}
-
-' ─── External Systems ─────────────────────────────────────────────
-package "External Systems" <<external>> #F2F3F4 {
-  [BRVM Data Feed]
-  [BCEAO API]
-  [IMF / World Bank APIs]
-  [FX / Commodity Providers]
-  [Cloudflare CDN + WAF]
-  [Email / SMS Gateway]
-}
-
-' ─── Dependency Rules (enforced) ─────────────────────────────────
-"Client Layer" --> "API Gateway Layer" : REST + WebSocket\n(NEVER direct to Service Layer)
-"API Gateway Layer" --> "Service Layer" : Internal service calls
-"API Gateway Layer" --> "Cross-Cutting" : Auth + Audit
-"Service Layer" --> "Infrastructure Layer" : Data read/write
-"Service Layer" --> "Cross-Cutting" : Auth + Audit + Observability
-"Service Layer" ..> "Service Layer" : Via Kafka ONLY\n(no direct service-to-service calls)
-"analytics-service\n(Python / FastAPI)" --> "nestjs-gateway" : Internal REST API only
-"market-data-service" <-- "External Systems" : Feed ingestion
-"macro-service" <-- "External Systems" : API polling
-"Client Layer" <-- "External Systems" : CDN asset delivery
-
-note bottom of "Service Layer"
-  CRITICAL DEPENDENCY RULE:
-  Service packages MUST NOT call each other directly.
-  All inter-service communication MUST use Kafka topics.
-  This enables independent horizontal scaling of each service
-  and prevents coupling that would break Kubernetes auto-scaling.
-end note
-
-note bottom of "Cross-Cutting"
-  Cross-cutting modules are consumed BY all layers.
-  They MUST NEVER depend on any Service or Gateway package.
-  Dependency inversion is enforced at the module level.
-end note
-
-@enduml
+    CLIENT -->|"REST + WebSocket
+(NEVER direct to Service Layer)"| APIGW
+    APIGW -->|"Internal service calls"| SVC
+    APIGW -->|"Auth + Audit"| CC
+    SVC -->|"Data read/write"| INFRA
+    SVC -->|"Auth + Audit + Observability"| CC
+    SVC <-.->|"Via Kafka ONLY
+(no direct service-to-service calls)"| SVC
+    EXT -->|"Feed ingestion"| MDS
+    EXT -->|"API polling"| MS
+    EXT -->|"CDN asset delivery"| CLIENT
 ```
 
 ---
